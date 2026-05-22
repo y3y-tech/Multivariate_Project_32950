@@ -1,0 +1,65 @@
+=== GMM on Communities and Crime ===
+RANDOM_STATE = 42
+Input:  /home/carvachar/stat32950/Multivariate_Project_32950/Data/communities_crime.csv
+Output: /home/carvachar/stat32950/Multivariate_Project_32950/charlie/outputs
+
+--- Step 1: load + held-out outcome split ---
+Rows: 1994
+Feature columns used: 100
+Zero-variance columns dropped: 0
+Outcome (continuous): ViolentCrimesPerPop  range=[0.0000, 1.0000]
+Outcome (binary):     HighViolentCrime  positives=993/1994
+
+--- Step 3: PCA ---
+PCA: n_pcs=16 reaches cumulative variance 0.8570 (threshold 0.85)
+
+--- Step 4: BIC sweep over K x covariance_type ---
+BIC grid (rows=K, cols=covariance_type):
+   spherical      diag      tied      full
+K                                         
+1  144212.27 126402.25 127314.00 127314.00
+2  138662.88 123631.07 127085.04 118870.49
+3  133410.37 122387.11 125534.68 115261.50
+4  131268.80 121626.94 123505.93 113921.28
+5  129987.39 120818.91 122234.28 113299.25
+6  128806.08 120100.53 121542.81 113289.02
+7  127571.72 119947.54 120940.91 112592.14
+8  126426.99 119470.05 120439.72 112939.22
+Selected K*=7, cov*=full with BIC=112592.14
+
+--- Step 5: fit final GMM on all data ---
+Cluster sizes (hard assignment):
+  cluster 0: 306
+  cluster 1: 451
+  cluster 2: 257
+  cluster 3: 282
+  cluster 4: 281
+  cluster 5: 224
+  cluster 6: 193
+Average max responsibility: 0.9530 (1/K = 0.1429)
+
+--- Step 6: cluster profiles in standardized feature space ---
+
+--- Step 7: crime comparison (held-out outcome) ---
+Per-cluster crime summary:
+         count  mean_violent  median_violent  high_crime_rate
+cluster                                                      
+0          306        0.3402          0.2800           0.6895
+1          451        0.0880          0.0600           0.1441
+2          257        0.2898          0.2500           0.7899
+3          282        0.2064          0.1450           0.4823
+4          281        0.2165          0.1600           0.5125
+5          224        0.1104          0.0750           0.2143
+6          193        0.5829          0.5800           0.9637
+Cluster x HighViolentCrime crosstab (counts + row-normalized proportions):
+         count_HighViolentCrime=0  count_HighViolentCrime=1  prop_HighViolentCrime=0  prop_HighViolentCrime=1
+cluster                                                                                                      
+0                              95                       211                   0.3105                   0.6895
+1                             386                        65                   0.8559                   0.1441
+2                              54                       203                   0.2101                   0.7899
+3                             146                       136                   0.5177                   0.4823
+4                             137                       144                   0.4875                   0.5125
+5                             176                        48                   0.7857                   0.2143
+6                               7                       186                   0.0363                   0.9637
+Adjusted Rand Index (cluster vs HighViolentCrime): 0.0934
+
